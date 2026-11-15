@@ -82,12 +82,21 @@ Rules:
         return {"sent": self._sent}
 
     def chat(self, user_id: str, message: str, context: dict) -> str:
-        """Conversational coaching — responds to free-text user messages."""
+        """Conversational coaching with RAG — retrieves relevant fitness knowledge before responding."""
         import json
+        try:
+            from tools.rag_engine import build_context
+            rag_context = build_context(message)
+        except Exception:
+            rag_context = ""
+
+        rag_block = f"\n\n{rag_context}" if rag_context else ""
         prompt = (
             f"User message: {message}\n\n"
-            f"User context:\n{json.dumps(context, indent=2)}\n\n"
+            f"User context:\n{json.dumps(context, indent=2)}"
+            f"{rag_block}\n\n"
             "Respond as a friendly, knowledgeable fitness coach. "
+            "Use the retrieved knowledge above where relevant. "
             "Keep it under 200 words. If the user mentions pain or injury, "
             "always recommend consulting a professional."
         )

@@ -15,6 +15,8 @@ import time
 try:
     if "OPENAI_API_KEY" in st.secrets:
         os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+    if "PINECONE_API_KEY" in st.secrets:
+        os.environ["PINECONE_API_KEY"] = st.secrets["PINECONE_API_KEY"]
     if "DB_PATH" in st.secrets:
         os.environ["DB_PATH"] = st.secrets["DB_PATH"]
 except Exception:
